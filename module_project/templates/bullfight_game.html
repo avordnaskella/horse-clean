@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Корида - Игра{% endblock %}
+
+{% block extra_css %}
+<style>
+    .game-container {
+        background: linear-gradient(135deg, #d4a373 0%, #b5835a 100%);
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        margin-bottom: 20px;
+    }
+    canvas {
+        display: block;
+        margin: 0 auto;
+        border-radius: 16px;
+        cursor: crosshair;
+        background: #f5e6c8;
+    }
+    .game-info {
+        background: white;
+        border-radius: 16px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    .score {
+        font-size: 28px;
+        font-weight: bold;
+        color: #2c5f2d;
+    }
+    .timer {
+        font-size: 20px;
+        color: #dc3545;
+    }
+    .restart-btn {
+        background: #2c5f2d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+    .restart-btn:hover {
+        background: #1e3a1f;
+    }
+    .instruction {
+        color: #666;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+    .info-banner {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 24px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        text-align: center;
+        color: white;
+    }
+    .info-banner img {
+        width: 100%;
+        max-width: 600px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        border: 3px solid #d4a373;
+    }
+    .info-text h3 {
+        color: #d4a373;
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+    .info-text p {
+        color: #e0e0e0;
+        line-height: 1.6;
+        font-size: 16px;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    @media (max-width: 768px) {
+        .info-banner {
+            padding: 20px;
+        }
+        .info-text h3 {
+            font-size: 22px;
+        }
+        .info-text p {
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-4">Корида</h1>
+
+<!-- Баннер с большой картинкой в центре -->
+<div class="info-banner">
+    <img src="{% static 'images/corrida.jpg' %}" alt="Коррида" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Corrida_1.jpg/600px-Corrida_1.jpg'">
+    <div class="info-text">
+        <h3>Что такое коррида?</h3>
+        <p>
+            Коррида (исп. corrida de toros) — традиционное испанское зрелище, 
+            которое представляет собой бой между тореадором и быком. 
+            Это искусство, сочетающее в себе храбрость, грацию и риск. 
+            Тореадор с помощью мулеты (красной ткани) выполняет серию 
+            манёвров, демонстрируя контроль над быком.
+        </p>
+        <p>
+            Конная коррида (исп. corrida de rejones; rejoneo — копьё) — одна из разновидностей боя быков, проводимая участниками преимущественно верхом. 
+            Данная статья рассказывает только о её испанских правилах (о португальском конном бое быков см. Торада). Конная коррида проводится в Испании в один из дней (зачастую последний) 
+            многодневных «ярмарок», когда организуется серия коррид.
+        </p>
+    </div>
+</div>
+
+<div class="game-container">
+    <canvas id="gameCanvas" width="800" height="500"></canvas>
+</div>
+
+<div class="game-info">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="score">Счёт: <span id="score">0</span></div>
+        </div>
+        <div class="col-md-6">
+            <div class="timer">Время: <span id="timer">30</span> сек</div>
+        </div>
+    </div>
+    <button class="restart-btn" onclick="startGame()">Начать заново</button>
+    <div class="instruction">
+        Кликните по быку, чтобы убить его и получить +1 очко
+    </div>
+</div>
+
+<div style="margin-top: 40px;">
+    <a href="{% url 'module_project:discipline_list' %}" class="btn btn-secondary">← Назад к дисциплинам</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Загружаем картинку быка
+    const bullImage = new Image();
+    bullImage.src = '{% static "images/bull.png" %}';
+    
+    // Быки
+    let bulls = [];
+    let score = 0;
+    let timeLeft = 30;
+    let gameRunning = true;
+    let spawnInterval = null;
+    let animationId = null;
+    
+    const BULL_SIZE = 60;
+    
+    function spawnBull() {
+        if (!gameRunning) return;
+        
+        const x = Math.random() * (canvas.width - BULL_SIZE) + BULL_SIZE / 2;
+        const y = Math.random() * (canvas.height - BULL_SIZE) + BULL_SIZE / 2;
+        
+        bulls.push({
+            x: x,
+            y: y,
+            size: BULL_SIZE,
+            image: bullImage
+        });
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Арена (песок)
+        ctx.fillStyle = '#f5e6c8';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Рисуем быков
+        bulls.forEach(bull => {
+            if (bullImage.complete && bullImage.naturalWidth > 0) {
+                ctx.drawImage(
+                    bullImage, 
+                    bull.x - BULL_SIZE/2, 
+                    bull.y - BULL_SIZE/2, 
+                    BULL_SIZE, 
+                    BULL_SIZE
+                );
+            } else {
+                ctx.fillStyle = '#5a3a1a';
+                ctx.beginPath();
+                ctx.arc(bull.x, bull.y, BULL_SIZE/2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = '30px Arial';
+                ctx.fillText('🐂', bull.x - 15, bull.y + 10);
+            }
+        });
+        
+        if (!gameRunning) {
+            ctx.fillStyle = 'rgba(0,0,0,0.8)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Игра окончена!', canvas.width/2, canvas.height/2 - 30);
+            ctx.font = '24px Arial';
+            ctx.fillText(`Ваш счёт: ${score}`, canvas.width/2, canvas.height/2 + 30);
+            ctx.font = '16px Arial';
+            ctx.fillText('Нажмите "Начать заново"', canvas.width/2, canvas.height/2 + 90);
+        }
+    }
+    
+    function killBull(bullIndex) {
+        bulls.splice(bullIndex, 1);
+        score++;
+        document.getElementById('score').innerText = score;
+    }
+    
+    function handleCanvasClick(e) {
+        if (!gameRunning) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
+        
+        for (let i = bulls.length - 1; i >= 0; i--) {
+            const bull = bulls[i];
+            const dx = mouseX - bull.x;
+            const dy = mouseY - bull.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < BULL_SIZE / 2) {
+                killBull(i);
+                break;
+            }
+        }
+    }
+    
+    function startTimer() {
+        const timerInterval = setInterval(() => {
+            if (!gameRunning) {
+                clearInterval(timerInterval);
+                return;
+            }
+            
+            if (timeLeft > 0) {
+                timeLeft--;
+                document.getElementById('timer').innerText = timeLeft;
+            }
+            
+            if (timeLeft <= 0) {
+                gameRunning = false;
+                clearInterval(timerInterval);
+                clearInterval(spawnInterval);
+                draw();
+            }
+        }, 1000);
+    }
+    
+    function startGame() {
+        bulls = [];
+        score = 0;
+        timeLeft = 30;
+        gameRunning = true;
+        
+        document.getElementById('score').innerText = score;
+        document.getElementById('timer').innerText = timeLeft;
+        
+        if (spawnInterval) clearInterval(spawnInterval);
+        
+        spawnInterval = setInterval(() => {
+            if (gameRunning && bulls.length < 10) {
+                spawnBull();
+            }
+        }, 800);
+        
+        startTimer();
+        
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => spawnBull(), i * 300);
+        }
+        
+        draw();
+    }
+    
+    canvas.addEventListener('click', handleCanvasClick);
+    startGame();
+    
+    function animate() {
+        draw();
+        animationId = requestAnimationFrame(animate);
+    }
+    
+    animate();
+</script>
+{% endblock %}

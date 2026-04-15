@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Конный спорт{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'module_project:discipline_list' %}">Конный спорт</a>
+            <button class="navbar-toggler" type="button">☰</button>
+            <ul class="navbar-nav">
+                <li><a href="{% url 'module_project:category_list' %}">Категории</a></li>
+                <li><a href="{% url 'module_project:discipline_list' %}">Дисциплины</a></li>
+                <li><a href="{% url 'module_project:interactive_horse' %}">Лошадь</a></li>
+                <li><a href="{% url 'module_project:bullfight_game' %}">Корида</a></li>
+                <li><a href="{% url 'module_project:video_page' %}">Испанская школа</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible">
+                    {{ message }}
+                    <button class="btn-close" type="button" onclick="this.parentElement.remove()">×</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{% static 'script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

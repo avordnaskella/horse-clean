@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{% if object %}Редактировать дисциплину{% else %}Новая дисциплина{% endif %}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {{ form.name.errors }}
+    </div>
+    <div class="mb-3">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+        {{ form.category.errors }}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {{ form.description.errors }}
+    </div>
+    <div class="mb-3">
+    {{ form.image.label_tag }}
+    {{ form.image }}
+    {{ form.image.errors }}
+    </div>
+    <div class="mb-3">
+        {{ form.difficulty.label_tag }}
+        {{ form.difficulty }}
+        {{ form.difficulty.errors }}
+    </div>
+    <div class="mb-3 form-check">
+        {{ form.is_olympic }}
+        {{ form.is_olympic.label_tag }}
+        {{ form.is_olympic.errors }}
+    </div>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a href="{% url 'module_project:discipline_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

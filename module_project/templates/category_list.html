@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Категории конного спорта</h1>
+<a href="{% url 'module_project:category_create' %}" class="btn btn-primary mb-3">Добавить категорию</a>
+<div class="row">
+    {% for category in categories %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                {% if category.image %}
+                    <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <p class="card-text">{{ category.description|truncatewords:20 }}</p>
+                    <a href="{% url 'module_project:category_detail' category.pk %}" class="btn btn-primary">Подробнее</a>
+                    <a href="{% url 'module_project:category_update' category.pk %}" class="btn btn-warning">Ред.</a>
+                    <a href="{% url 'module_project:category_delete' category.pk %}" class="btn btn-danger">Удал.</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>Нет категорий.</p>
+    {% endfor %}
+</div>
+{% endblock %}

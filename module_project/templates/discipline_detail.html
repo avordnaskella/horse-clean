@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ discipline.name }}</h1>
+{% if discipline.image %}
+    <img src="{{ discipline.image.url }}" class="img-fluid mb-3" alt="{{ discipline.name }}" style="max-width: 100%; border-radius: 8px;">
+{% endif %}
+<p><strong>Категория:</strong> {{ discipline.category.name }}</p>
+<p><strong>Сложность:</strong> {{ discipline.get_difficulty_display }}</p>
+<p><strong>Олимпийский вид:</strong> {% if discipline.is_olympic %}Да{% else %}Нет{% endif %}</p>
+<p><strong>Описание:</strong> {{ discipline.description }}</p>
+<p><small>Дата создания: {{ discipline.created_at }}</small></p>
+<a href="{% url 'module_project:discipline_list' %}" class="btn btn-secondary">Назад</a>
+<a href="{% url 'module_project:discipline_update' discipline.pk %}" class="btn btn-warning">Редактировать</a>
+<a href="{% url 'module_project:discipline_delete' discipline.pk %}" class="btn btn-danger">Удалить</a>
+{% endblock %}

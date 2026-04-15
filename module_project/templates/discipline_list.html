@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Дисциплины конного спорта</h1>
+
+<div class="row mb-3 g-3 align-items-end">
+    <div class="col-md-4">
+        <label for="categoryFilter" class="form-label">Категория:</label>
+        <select class="form-control" id="categoryFilter">
+            <option value="">Все категории</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == selected_category %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="searchInput" class="form-label">Поиск по названию:</label>
+        <input type="text" class="form-control" id="searchInput" placeholder="Введите название...">
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{% url 'module_project:discipline_create' %}" class="btn btn-primary">Добавить дисциплину</a>
+    </div>
+</div>
+
+<div id="loadingSpinner" class="text-center d-none">
+    <div class="spinner-border"></div>
+</div>
+
+<div id="disciplinesContainer">
+    {% include 'disciplines_table.html' with disciplines=disciplines %}
+</div>
+
+<div id="quickViewModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Информация о дисциплине</h5>
+                <button class="btn-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="quickViewContent">Загрузка...</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
