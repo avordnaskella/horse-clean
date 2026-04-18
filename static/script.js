@@ -1,3 +1,4 @@
+// Бургер-меню
 document.addEventListener('DOMContentLoaded', function() {
     const toggler = document.querySelector('.navbar-toggler');
     const nav = document.querySelector('.navbar-nav');
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Загрузка дисциплин
 function loadDisciplines() {
     const categoryId = document.getElementById('categoryFilter').value;
     const search = document.getElementById('searchInput').value;
@@ -37,16 +39,18 @@ function loadDisciplines() {
         });
 }
 
+// Обновление таблицы дисциплин
 function updateDisciplinesTable(data) {
     const container = document.getElementById('disciplinesContainer');
     if (!container) return;
     if (data.length === 0) {
         container.innerHTML = '<p class="text-muted">Ничего не найдено.</p>';
     } else {
-        let html = '<table class="table table-striped table-hover">';
-        html += '<thead><tr><th>Название</th><th>Категория</th><th>Сложность</th><th>Олимпийский</th><th>Действия</th><th>Быстрый просмотр</th></tr></thead><tbody>';
+        let html = '<div class="table-responsive"><table class="table table-striped table-hover">';
+        html += '<thead><tr><th>Изображение</th><th>Название</th><th>Категория</th><th>Сложность</th><th>Олимпийский</th><th>Действия</th><th>Быстрый просмотр</th></tr></thead><tbody>';
         data.forEach(d => {
             html += `<tr>
+                <td>${d.image ? `<img src="${d.image}" width="50" height="50" style="object-fit: cover; border-radius: 4px;">` : '—'}</td>
                 <td><a href="${d.url}">${d.name}</a></td>
                 <td>${d.category}</td>
                 <td>${d.difficulty}</td>
@@ -55,17 +59,16 @@ function updateDisciplinesTable(data) {
                     <a href="/disciplines/${d.id}/update/" class="btn btn-sm btn-warning">Ред.</a>
                     <a href="/disciplines/${d.id}/delete/" class="btn btn-sm btn-danger">Удал.</a>
                 </td>
-                <td>
-                    <button class="btn btn-sm btn-info quick-view-btn" data-id="${d.id}">👁️</button>
-                </td>
+                <td><button class="btn btn-sm btn-info quick-view-btn" data-id="${d.id}">👁️</button></td>
             </tr>`;
         });
-        html += '</tbody></table>';
+        html += '</tbody></table></div>';
         container.innerHTML = html;
     }
     attachQuickViewHandlers();
 }
 
+// Обработчики кнопок быстрого просмотра
 function attachQuickViewHandlers() {
     document.querySelectorAll('.quick-view-btn').forEach(btn => {
         btn.removeEventListener('click', quickViewHandler);
@@ -73,6 +76,7 @@ function attachQuickViewHandlers() {
     });
 }
 
+// Быстрый просмотр
 function quickViewHandler(e) {
     const disciplineId = this.dataset.id;
     fetch(`/api/disciplines/${disciplineId}/quick/`)
@@ -81,28 +85,47 @@ function quickViewHandler(e) {
             const modalBody = document.getElementById('quickViewContent');
             if (modalBody) {
                 modalBody.innerHTML = `
-                    <p><strong>Название:</strong> ${data.name}</p>
-                    <p><strong>Категория:</strong> ${data.category}</p>
-                    <p><strong>Сложность:</strong> ${data.difficulty}</p>
-                    <p><strong>Олимпийский:</strong> ${data.is_olympic ? 'Да' : 'Нет'}</p>
-                    <p><strong>Описание:</strong> ${data.description}</p>
+                    <p><strong>Название:</strong> ${escapeHtml(data.name)}</p>
+                    <p><strong>Категория:</strong> ${escapeHtml(data.category)}</p>
+                    <p><strong>Сложность:</strong> ${escapeHtml(data.difficulty)}</p>
+                    <p><strong>Олимпийский:</strong> ${data.is_olympic ? '✅ Да' : '❌ Нет'}</p>
+                    <p><strong>Описание:</strong> ${escapeHtml(data.description) || '—'}</p>
                     <p><strong>Дата создания:</strong> ${data.created_at}</p>
                 `;
             }
             const modal = document.getElementById('quickViewModal');
-            if (modal) modal.style.display = 'flex';
+            if (modal) {
+                modal.style.display = 'flex';
+            }
         })
-        .catch(error => console.
-
-
-error('Ошибка загрузки деталей:', error));
+        .catch(error => console.error('Ошибка загрузки деталей:', error));
 }
 
+// Закрытие модального окна
 function closeModal() {
     const modal = document.getElementById('quickViewModal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
+// Закрытие по клику вне окна
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('quickViewModal');
+    if (e.target === modal) {
+        closeModal();
+    }
+});
+
+// Функция для экранирования HTML
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Debounce для поиска
 function debounce(func, delay) {
     let timeout;
     return function() {
