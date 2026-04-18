@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.core.management import call_command
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,14 +128,27 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEBUG = True  # на Render должно быть False
 
 
-# ВРЕМЕННО: создать суперпользователя (удалить после первого входа)
-import os
-if os.environ.get('DATABASE_URL'):
+
+def create_superuser():
     try:
         from django.contrib.auth import get_user_model
         User = get_user_model()
         if not User.objects.filter(username='avordnaskella').exists():
-            User.objects.create_superuser('avordnaskella', 'avordnaskella@gmail.com', 'Arina*Piar2007')
+            User.objects.create_superuser(
+                username='avordnaskella',
+                email='avordnaskella@gmail.com',
+                password='Arina*Piar2007'
+            )
             print("Суперпользователь создан: login=avordnaskella, password=Arina*Piar2007")
+        else:
+            print("Суперпользователь уже существует")
     except Exception as e:
-        print(f"Ошибка создания суперпользователя: {e}")
+        print(f"Ошибка: {e}")
+
+# Выполняем после загрузки Django
+if os.environ.get('DATABASE_URL'):
+    try:
+        call_command('migrate', '--noinput')
+        create_superuser()
+    except:
+        pass
