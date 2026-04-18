@@ -125,7 +125,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEBUG = True  # на Render должно быть False
+DEBUG = True  
 
-
+CSRF_TRUSTED_ORIGINS = ['https://horse-clean.onrender.com']
 
