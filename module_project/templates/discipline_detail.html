@@ -3,7 +3,9 @@
 {% block content %}
 <h1>{{ discipline.name }}</h1>
 {% if discipline.image %}
-    <img src="{{ discipline.image.url }}" class="img-fluid mb-3" alt="{{ discipline.name }}" style="max-width: 100%; border-radius: 8px;">
+    <div class="discipline-image-wrapper">
+        <img src="{{ discipline.image.url }}" class="discipline-detail-image" alt="{{ discipline.name }}">
+    </div>
 {% endif %}
 <p><strong>Категория:</strong> {{ discipline.category.name }}</p>
 <p><strong>Сложность:</strong> {{ discipline.get_difficulty_display }}</p>

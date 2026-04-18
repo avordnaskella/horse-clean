@@ -523,3 +523,75 @@ label {
         font-size: 1.5rem;
     }
 }
+
+/* 1. Кнопки в таблице — не сливаются */
+.table .btn-sm {
+    margin: 2px 4px;
+    display: inline-block;
+}
+
+.table td:last-child {
+    white-space: nowrap;
+    min-width: 80px;
+}
+
+/* 2. Картинка дисциплины — адаптивная */
+.discipline-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+/* На странице списка дисциплин — миниатюры */
+#disciplinesContainer .table img {
+    max-width: 50px;
+    height: auto;
+    border-radius: 6px;
+}
+
+/* 3. Блок с корридой — не вылезает за экран */
+.info-banner {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+.info-banner img {
+    max-width: 100%;
+    height: auto;
+}
+
+.info-text {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* 4. Мобильные кнопки */
+@media (max-width: 768px) {
+    .table .btn-sm {
+        margin: 2px;
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .table td:last-child {
+        min-width: 100px;
+    }
+    
+    /* Контейнер игры */
+    .game-container {
+        overflow-x: hidden;
+    }
+    
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+.discipline-detail-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
