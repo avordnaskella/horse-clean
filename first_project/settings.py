@@ -125,3 +125,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEBUG = True  # на Render должно быть False
+
+
+# ВРЕМЕННО: создать суперпользователя (удалить после первого входа)
+import os
+if os.environ.get('DATABASE_URL'):
+    try:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(username='avordnaskella').exists():
+            User.objects.create_superuser('avordnaskella', 'avordnaskella@gmail.com', 'Arina*Piar2007')
+            print("Суперпользователь создан: login=avordnaskella, password=Arina*Piar2007")
+    except Exception as e:
+        print(f"Ошибка создания суперпользователя: {e}")
