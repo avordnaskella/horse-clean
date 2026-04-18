@@ -3,7 +3,9 @@
 {% block content %}
 <h1>{{ category.name }}</h1>
 {% if category.image %}
-    <img src="{{ category.image.url }}" class="img-fluid mb-3" alt="{{ category.name }}">
+    <div class="category-image-wrapper">
+        <img src="{{ category.image.url }}" class="category-detail-image" alt="{{ category.name }}">
+    </div>
 {% endif %}
 <p>{{ category.description }}</p>
 <p><small>Дата создания: {{ category.created_at }}</small></p>

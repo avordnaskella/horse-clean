@@ -88,7 +88,7 @@ function quickViewHandler(e) {
                     <p><strong>Название:</strong> ${escapeHtml(data.name)}</p>
                     <p><strong>Категория:</strong> ${escapeHtml(data.category)}</p>
                     <p><strong>Сложность:</strong> ${escapeHtml(data.difficulty)}</p>
-                    <p><strong>Олимпийский:</strong> ${data.is_olympic ? '✅ Да' : '❌ Нет'}</p>
+                    <p><strong>Олимпийский:</strong> ${data.is_olympic ? 'Да' : 'Нет'}</p>
                     <p><strong>Описание:</strong> ${escapeHtml(data.description) || '—'}</p>
                     <p><strong>Дата создания:</strong> ${data.created_at}</p>
                 `;
