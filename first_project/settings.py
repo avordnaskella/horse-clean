@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -75,13 +76,13 @@ WSGI_APPLICATION = 'first_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -128,4 +129,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEBUG = True  
 
 CSRF_TRUSTED_ORIGINS = ['https://horse-clean.onrender.com']
+
+if os.environ.get('DATABASE_URL'):
+    try:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(username='avordnaskella').exists():
+            User.objects.create_superuser('avordnaskella', 'avordnaskella@gmail.com', 'Arina*Piar2007')
+            print("Суперпользователь создан в Supabase!")
+    except Exception as e:
+        print(f"Ошибка: {e}")
 
