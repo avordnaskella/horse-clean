@@ -3,3 +3,4 @@ pillow
 gunicorn
 whitenoise
 psycopg2-binary
+dj-database-url==2.2.0
