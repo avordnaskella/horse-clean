@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from django.apps import AppConfig
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -130,13 +131,23 @@ DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = ['https://horse-clean.onrender.com']
 
-if os.environ.get('DATABASE_URL'):
-    try:
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        if not User.objects.filter(username='avordnaskella').exists():
-            User.objects.create_superuser('avordnaskella', 'avordnaskella@gmail.com', 'Arina*Piar2007')
-            print("Суперпользователь создан")
-    except Exception as e:
-        print(f"Ошибка: {e}")
 
+class ModuleProjectConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'module_project'
+
+    def ready(self):
+        import os
+        if os.environ.get('DATABASE_URL'):
+            try:
+                from django.contrib.auth import get_user_model
+                User = get_user_model()
+                if not User.objects.filter(username='avordnaskella').exists():
+                    User.objects.create_superuser(
+                        username='avordnaskella',
+                        email='avordnaskella@gmail.com',
+                        password='Arina*Piar2007'
+                    )
+                    print("Суперпользователь создан в Aiven!")
+            except Exception as e:
+                print(f"Ошибка: {e}")
