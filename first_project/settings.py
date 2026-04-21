@@ -14,7 +14,9 @@ from pathlib import Path
 import os
 import dj_database_url
 from django.apps import AppConfig
-
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,6 +133,13 @@ DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = ['https://horse-clean.onrender.com']
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dwrivnuuo',
+    'API_KEY': '828541981969745',
+    'API_SECRET': 'JHNYTRR8FBV7UHGvFccm4kxe3bw'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 class ModuleProjectConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
