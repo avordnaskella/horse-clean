@@ -106,11 +106,9 @@ def filter_disciplines(request):
             'name': d.name,
             'category': d.category.name,
             'difficulty': d.get_difficulty_display(),
-            'is_olympic': d.
-
-
-is_olympic,
+            'is_olympic': d.is_olympic,
             'url': d.get_absolute_url(),
+            'image': d.image.url if d.image else None,  # ← ДОБАВЬ ЭТУ СТРОКУ
         }
         for d in disciplines
     ]
