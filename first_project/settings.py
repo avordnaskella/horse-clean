@@ -136,7 +136,7 @@ if os.environ.get('DATABASE_URL'):
         User = get_user_model()
         if not User.objects.filter(username='avordnaskella').exists():
             User.objects.create_superuser('avordnaskella', 'avordnaskella@gmail.com', 'Arina*Piar2007')
-            print("Суперпользователь создан в Supabase!")
+            print("Суперпользователь создан")
     except Exception as e:
         print(f"Ошибка: {e}")
 
