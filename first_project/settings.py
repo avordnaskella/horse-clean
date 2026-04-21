@@ -13,17 +13,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-3=n0ydrv#8%#%p657&7en0l6y+@%b0vp1-e6z-ohg3x%nj&^5z'
@@ -33,9 +25,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['horse-clean.onrender.com', 'localhost', '127.0.0.1']
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,8 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'module_project',
-    'cloudinary_storage',  # добавить
-    'cloudinary',          # добавить
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -77,10 +67,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'first_project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 # Database
 DATABASES = {
     'default': dj_database_url.config(
@@ -90,8 +76,6 @@ DATABASES = {
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -107,49 +91,30 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-
-
-
-DEBUG = True  
-
 CSRF_TRUSTED_ORIGINS = ['https://horse-clean.onrender.com']
 
+# ========== CLOUDINARY (MUST BE AT THE END) ==========
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
-print("=== CHECK cloudinary_storage ===")
-try:
-    import cloudinary_storage
-    print("cloudinary_storage OK")
-except ImportError:
-    print("cloudinary_storage NOT INSTALLED")
-
-    
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dwrivnuuo',
     'API_KEY': '828541981969745',
     'API_SECRET': 'JHNYTRR8FBV7UHGvFccm4kxe3bw'
 }
 
-# Для Django 6.0
 STORAGES = {
     'default': {
         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
@@ -159,8 +124,7 @@ STORAGES = {
     },
 }
 
-
-
+# CREATE SUPERUSER (TEMPORARY)
 if os.environ.get('DATABASE_URL'):
     try:
         from django.contrib.auth import get_user_model
@@ -171,7 +135,6 @@ if os.environ.get('DATABASE_URL'):
     except Exception as e:
         print(f"Ошибка: {e}")
 
-
-# какой storage используется
+#  CHECK STORAGE (FOR DEBUG) 
 from django.core.files.storage import default_storage
 print(f"DEFAULT_FILE_STORAGE = {default_storage.__class__.__name__}")
