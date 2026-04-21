@@ -32,3 +32,8 @@ else:
     # Для продакшена через WhiteNoise
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+from django.core.files.storage import default_storage
+print(f"DEFAULT_FILE_STORAGE (from urls) = {default_storage.__class__.__name__}")

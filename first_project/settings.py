@@ -135,6 +135,3 @@ if os.environ.get('DATABASE_URL'):
     except Exception as e:
         print(f"Ошибка: {e}")
 
-#  CHECK STORAGE (FOR DEBUG) 
-from django.core.files.storage import default_storage
-print(f"DEFAULT_FILE_STORAGE = {default_storage.__class__.__name__}")
