@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-from django.apps import AppConfig
+
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'module_project'
+    'module_project',
+    'cloudinary_storage',  # добавить
+    'cloudinary',          # добавить
 ]
 
 MIDDLEWARE = [
@@ -149,22 +151,13 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-class ModuleProjectConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'module_project'
 
-    def ready(self):
-        import os
-        if os.environ.get('DATABASE_URL'):
-            try:
-                from django.contrib.auth import get_user_model
-                User = get_user_model()
-                if not User.objects.filter(username='avordnaskella').exists():
-                    User.objects.create_superuser(
-                        username='avordnaskella',
-                        email='avordnaskella@gmail.com',
-                        password='Arina*Piar2007'
-                    )
-                    print("Суперпользователь создан в Aiven!")
-            except Exception as e:
-                print(f"Ошибка: {e}")
+if os.environ.get('DATABASE_URL'):
+    try:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(username='avordnaskella').exists():
+            User.objects.create_superuser('avordnaskella', 'avordnaskella@gmail.com', 'Arina*Piar2007')
+            print("Суперпользователь создан в Aiven!")
+    except Exception as e:
+        print(f"Ошибка: {e}")
