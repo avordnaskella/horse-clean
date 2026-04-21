@@ -104,13 +104,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 CSRF_TRUSTED_ORIGINS = ['https://horse-clean.onrender.com']
 
-# ========== CLOUDINARY (MUST BE AT THE END) ==========
+# CLOUDINARY (MUST BE AT THE END)
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dwrivnuuo',
+    'CLOUD_NAME': 'dwrlvnuuo',
     'API_KEY': '828541981969745',
     'API_SECRET': 'JHNYTRR8FBV7UHGvFccm4kxe3bw'
 }
