@@ -149,7 +149,14 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'JHNYTRR8FBV7UHGvFccm4kxe3bw'
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    'default': {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
 
 
 if os.environ.get('DATABASE_URL'):
