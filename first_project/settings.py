@@ -161,3 +161,8 @@ if os.environ.get('DATABASE_URL'):
             print("Суперпользователь создан в Aiven!")
     except Exception as e:
         print(f"Ошибка: {e}")
+
+
+# какой storage используется
+from django.core.files.storage import default_storage
+print(f"DEFAULT_FILE_STORAGE = {default_storage.__class__.__name__}")
