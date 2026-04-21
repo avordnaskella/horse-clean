@@ -132,6 +132,15 @@ DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = ['https://horse-clean.onrender.com']
 
+
+print("=== CHECK cloudinary_storage ===")
+try:
+    import cloudinary_storage
+    print("cloudinary_storage OK")
+except ImportError:
+    print("cloudinary_storage NOT INSTALLED")
+
+    
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dwrivnuuo',
     'API_KEY': '828541981969745',
