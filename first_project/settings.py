@@ -13,10 +13,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -149,6 +149,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'JHNYTRR8FBV7UHGvFccm4kxe3bw'
 }
 
+# Для Django 6.0
 STORAGES = {
     'default': {
         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
@@ -157,6 +158,7 @@ STORAGES = {
         'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
     },
 }
+
 
 
 if os.environ.get('DATABASE_URL'):
