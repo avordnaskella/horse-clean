@@ -25,43 +25,24 @@ Frontend - HTML, CSS, JavaScript
 
 ## Структура проекта
 ├── first_project/ # Настройки Django  
-
 │ ├── settings.py  
-
 │ ├── urls.py  
-
 │ └── wsgi.py  
-
 ├── module_project/ # Основное приложение  
-
 │ ├── models.py # Модели Category, Discipline  
-
 │ ├── views.py # Представления (CRUD, AJAX)  
-
 │ ├── forms.py # Формы с валидацией  
-
 │ ├── admin.py # Регистрация моделей в админке  
-
 │ ├── urls.py # Маршруты приложения  
-
 │ └── templates/ # HTML-шаблоны  
-
 ├── static/ # Статические файлы  
-
 │ ├── style.css # Стили (адаптив)  
-
 │ ├── script.js # JS (фильтрация, модальное окно)  
-
 │ ├── images/ # Картинки (лошадь, бык, коррида)  
-
 │ └── videos/ # Видео об испанской школе  
-
 ├── media/ # Загружаемые картинки (через Cloudinary)  
-
 ├── Dockerfile # Инструкция для сборки образа  
-
 ├── requirements.txt # Зависимости Python  
-
 └── README.md 
 
 ## Запуск
